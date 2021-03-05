@@ -2,10 +2,11 @@ import { Console } from 'console';
 import { useEffect, useState } from 'react';
 
 import style from '../styles/components/Countdown.module.css';
+import { Profile } from './Profile';
 
 export function Countdown(){
     let tempoPadrao = 0.1 * 60;
-    let hasFineshed = false;
+    const [hasFinished, setHasFinished] = useState(false);
     const [time, setTime] = useState(tempoPadrao);
     const [isActive, setIsActive] = useState(false);
     const minutes = Math.floor(time/60);
@@ -20,7 +21,7 @@ export function Countdown(){
         setIsActive(true);
     }
     function resetCountdown(){
-        //setIsActive(false);
+        setIsActive(false);
         clearTimeout(countDownTimeOut);
         setTime(tempoPadrao);
     }
@@ -31,7 +32,7 @@ export function Countdown(){
         }, 1000);
     } else if(isActive && time ===0){
         console.log('finalizou');
-        hasFineshed = true;
+        setHasFinished(true);
     }}, [isActive, time]);
 
     return (
@@ -47,12 +48,17 @@ export function Countdown(){
                 <span>{secondRight}</span>
             </div>
         </div>
-        {isActive ?
+        {hasFinished ? 
+        (<button className={style.countdownButton} disabled>Ciclo Encerrado</button>)       
+        :(
+    <>
+         {isActive ?
          (<button className={style.countdownButtonActive} type='button' onClick={resetCountdown}>Abandonar ciclo</button>)
          :
-        ( <button className={style.countdownButton} type='button' onClick={startCountdown}>Iniciar ciclo</button>)
-         
+        (<button className={style.countdownButton} type='button' onClick={startCountdown}>Iniciar ciclo</button>)
          }
-        </div>
+    </>
+        )}       
+       </div>
     );
 }
